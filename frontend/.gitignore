@@ -1,0 +1,9 @@
+node_modules
+*.log*
+.nuxt
+.nitro
+.cache
+.output
+.env
+prisma/schema.prisma
+prisma/zod

@@ -1,0 +1,17 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+// https://github.com/CarterGrimmeisen/zod-prisma
+// NOTE: import found in ../frontend/prisma/
+generator zod {
+    provider              = "zod-prisma"
+    output                = "./zod"
+    imports               = "./zod-schemas"
+    relationModel         = "default"
+    modelCase             = "PascalCase"
+    modelSuffix           = "Prisma"
+    useDecimalJs          = true
+    prismaJsonNullability = true
+    // prismaJsonNullability = false
+}
