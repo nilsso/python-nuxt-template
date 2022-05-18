@@ -8,6 +8,15 @@ model User {
     name String
 
     posts Post[]
+    files File[]
+}
+
+model File {
+    id     String @id @default(uuid())
+    userId Int
+    blob   Bytes
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Post {

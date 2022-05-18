@@ -2,11 +2,13 @@
 from copy import copy
 from typing import Any
 
-from prisma import models
+from prisma import models, types
+from pydantic import create_model_from_typeddict
 from starlite import Controller, CORSConfig, OpenAPIConfig, Starlite, get
 
 from . import prisma
 from .controllers import PostController, TagController, UserController
+from .controllers.config import Config
 
 
 async def init():
@@ -44,6 +46,12 @@ async def init():
             },
         },
     )
+
+
+class FileController(Controller):
+    @get()
+    async def file_find_many() -> list[models.File]:
+        return await prisma.file.find_many()
 
 
 app = Starlite(
