@@ -6,4 +6,21 @@ datasource db {
 model User {
     id   Int    @id @default(autoincrement())
     name String
+
+    posts Post[]
+}
+
+model Post {
+    id     Int    @id @default(autoincrement())
+    userId Int
+    title  String
+
+    user User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+    tags Tag[]
+}
+
+model Tag {
+    tag String @id
+
+    posts Post[]
 }

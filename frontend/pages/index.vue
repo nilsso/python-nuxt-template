@@ -1,81 +1,93 @@
 <script lang="ts" setup>
-import { _UserPrisma } from '@/prisma/zod/user';
+import { UserPrisma, CompleteUser } from '@/prisma/zod/user';
 
-const { data, pending, refresh } = await useFetch<unknown[]>('http://localhost:8000/user/find/many', { server: false });
-
-interface User {
-  id?: number,
-  name?: string,
-}
-
-const users = useState<User[] | null>('users', () => null);
-
-const createUser = async () => {
-  await $fetch('http://localhost:8000/user/create/next', {
+const { data, pending, refresh } = await useFetch<unknown[]>(
+  'http://localhost:8000/user',
+  {
+    server: false,
     method: 'POST',
-  });
-  refresh();
-};
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: {
+      // take: 1,
+      // skip: 0,
+      include: {
+        posts: true,
+      },
+    },
+  },
+);
 
-const deleteRandomUser = async() => {
-  await $fetch('http://localhost:8000/user/delete/random', { method: 'POST' });
-  refresh();
-};
+const users = useState<CompleteUser[] | null>('users', () => null);
 
-const deleteAllUsers = async() => {
-  await $fetch('http://localhost:8000/user/delete/all', { method: 'POST' });
-  refresh();
-};
+watch(pending, () => {
+  const parsed = data.value.map(d => UserPrisma.parse(d));
+  console.dir(parsed);
+  users.value = parsed;
+});
 
-watch(pending, () => users.value = data.value.map(d => _UserPrisma.parse(d)));
+// const createUser = async () => {
+//   await $fetch('http://localhost:8000/user/next', { method: 'POST' });
+//   refresh();
+// };
+//
+// const deleteRandomUser = async() => {
+//   await $fetch('http://localhost:8000/user/random', { method: 'DELETE' });
+//   refresh();
+// };
+//
+// const deleteAllUsers = async() => {
+//   await $fetch('http://localhost:8000/user/all', { method: 'DELETE' });
+//   refresh();
+// };
 </script>
 
 <template>
-  <div>
-    <h2>Index</h2>
-    <div>
-      <h3>Users</h3>
-      <div>
-        <button
-          class="px-1 py-.5 text-white bg-blue-500 border-2 border-blue-500 rounded"
-          role="button"
-          @click.prevent="createUser"
-        >
-          Create Next
-        </button>
-      </div>
-      <div>
-        <button
-          class="px-1 py-.5 text-red-500 bg-white border-2 border-red-500 rounded"
-          role="button"
-          @click.prevent="deleteRandomUser"
-        >
-          Delete Random
-        </button>
-        <button
-          class="px-1 py-.5 text-white bg-red-500 border-2 border-red-500 rounded"
-          role="button"
-          @click.prevent="deleteAllUsers"
-        >
-          Delete All
-        </button>
-      </div>
+  <div class="space-y-2">
+    <Card
+      class="w-max shadow"
+      header-bg-color="bg-cyan-500"
+    >
+      <template #header>
+        <div class="flex space-x-2">
+          <div class="text-cyan-200">
+            <span>Users</span>
+          </div>
+          <!-- <button -->
+          <!--   class="inline block p-0 text-sm leading-0 text-white bg-blue-500 border-2 border-blue-500 rounded" -->
+          <!--   role="button" -->
+          <!-- > -->
+          <!--   Create Next -->
+          <!-- </button> -->
+          <!-- <button -->
+          <!--   class="px-1 py-.5 text-base text-red-500 bg-white border-2 border-red-500 rounded" -->
+          <!--   role="button" -->
+          <!-- > -->
+          <!--   Delete Random -->
+          <!-- </button> -->
+          <!-- <button -->
+          <!--   class="px-1 py-.5 text-base text-white bg-red-500 border-2 border-red-500 rounded" -->
+          <!--   role="button" -->
+          <!-- > -->
+          <!--   Delete All -->
+          <!-- </button> -->
+        </div>
+      </template>
       <p v-if="users === null">
         Waiting...
       </p>
-      <div v-else>
-        <div
+      <div
+        v-else
+        class="flex flex-col space-y-2"
+      >
+        <ModelUser
           v-for="user in users"
           :key="user.id"
-        >
-          <span>
-            ID: {{ user.id }}
-          </span>
-          <span>
-            Name: {{ user.name }}
-          </span>
-        </div>
+          :user="user"
+        />
       </div>
-    </div>
+    </Card>
   </div>
 </template>

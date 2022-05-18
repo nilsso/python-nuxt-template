@@ -1,61 +1,81 @@
-"""uvicorn app."""
-from getpass import getuser
-from random import shuffle
+# pylama:ignore=D100,D101,D102,D103,D104,D106,D107
 
-from prisma import Prisma, models
-from starlite import CORSConfig, Starlite, get, post
+from prisma import models
+from starlite import Controller, CORSConfig, Starlite, get
 
-prisma = Prisma(auto_register=True)
-
-cors_config = CORSConfig(allow_origins=["*"])
+from . import prisma
+from .controllers import UserController
 
 
-@get(path="/")
-async def index() -> str:
-    """Index page."""
-    return "Hello, world"
+class PostController(Controller):
+    path = "/post"
+    tags = ["post"]
+
+    @get()
+    async def find_post_many(self) -> list[models.Post]:
+        return await prisma.post.find_many()
 
 
-@get(path="/user/find/many")
-async def user_find_many() -> list[models.User]:
-    """Find many users."""
-    return await prisma.user.find_many()
+class TagController(Controller):
+    path = "/tag"
+    tags = ["tag"]
+
+    @get()
+    async def find_tag_many(self) -> list[models.Tag]:
+        return await prisma.tag.find_many()
 
 
-@post(path="/user/create/next")
-async def user_create_next() -> models.User:
-    """Create next user."""
-    i = await prisma.user.count()
-    return await prisma.user.create(data={"name": f"{getuser()} {i}"})
-
-
-@post(path="/user/delete/random")
-async def user_delete_random() -> models.User | None:
-    """Delete random user."""
-    ids = [user.id for user in await prisma.user.find_many()]
-    if ids:
-        shuffle(ids)
-        id = ids.pop()
-        return await prisma.user.delete(where={"id": id})
-
-
-@post(path="/user/delete/all")
-async def user_delete_all() -> None:
-    """Delete all users."""
+async def init():
+    await prisma.post.delete_many()
+    await prisma.tag.delete_many()
     await prisma.user.delete_many()
+
+    await prisma.user.create(
+        data={
+            "name": "Robert",
+        },
+    )
+    user = await prisma.user.create(
+        data={
+            "name": "Nils",
+        },
+    )
+    tag = await prisma.tag.create(
+        data={
+            "tag": "Generic",
+        },
+    )
+    await prisma.post.create(
+        data={
+            "title": "A Post",
+            "user": {
+                "connect": {
+                    "id": user.id,
+                },
+            },
+            "tags": {
+                "connect": {
+                    "tag": tag.tag,
+                },
+            },
+        },
+    )
 
 
 app = Starlite(
-    cors_config=cors_config,
+    debug=True,
+    cors_config=CORSConfig(
+        allow_origins=["*"],
+        allow_methods=["*"],
+    ),
     on_startup=[
         lambda: prisma.connect(),
+        # init,
     ],
     on_shutdown=[lambda: prisma.disconnect()],
     route_handlers=[
-        index,
-        user_create_next,
-        user_find_many,
-        user_delete_random,
-        user_delete_all,
+        UserController,
+        PostController,
+        TagController,
     ],
 )
