@@ -1,28 +1,12 @@
 # pylama:ignore=D100,D101,D102,D103,D104,D106,D107
+from copy import copy
+from typing import Any
 
 from prisma import models
-from starlite import Controller, CORSConfig, Starlite, get
+from starlite import Controller, CORSConfig, OpenAPIConfig, Starlite, get
 
 from . import prisma
-from .controllers import UserController
-
-
-class PostController(Controller):
-    path = "/post"
-    tags = ["post"]
-
-    @get()
-    async def find_post_many(self) -> list[models.Post]:
-        return await prisma.post.find_many()
-
-
-class TagController(Controller):
-    path = "/tag"
-    tags = ["tag"]
-
-    @get()
-    async def find_tag_many(self) -> list[models.Tag]:
-        return await prisma.tag.find_many()
+from .controllers import PostController, TagController, UserController
 
 
 async def init():
@@ -64,13 +48,18 @@ async def init():
 
 app = Starlite(
     debug=True,
+    openapi_config=OpenAPIConfig(
+        title="My API",
+        version="0.0.1",
+        # create_examples=True,
+    ),
     cors_config=CORSConfig(
         allow_origins=["*"],
         allow_methods=["*"],
     ),
     on_startup=[
         lambda: prisma.connect(),
-        # init,
+        init,
     ],
     on_shutdown=[lambda: prisma.disconnect()],
     route_handlers=[

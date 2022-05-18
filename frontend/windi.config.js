@@ -3,5 +3,7 @@ import { defineConfig } from 'windicss/helpers'
 export default defineConfig({
   shortcuts: {},
   theme: {},
-  plugins: [],
+  plugins: [
+    require('@windicss/plugin-icons'),
+  ],
 })

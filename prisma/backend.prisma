@@ -3,5 +3,5 @@ generator python {
     provider                    = "prisma-client-py"
     enable_experimental_decimal = true
     // -1 for full recursive types (bad with Pydantic though)
-    recursive_type_depth        = 2
+    recursive_type_depth        = 3
 }

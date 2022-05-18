@@ -1,9 +1,13 @@
 <script lang="ts" setup>
 import { CompleteUser } from '@/prisma/zod';
 
-defineProps<{
+const props = defineProps<{
   user: CompleteUser,
 }>();
+
+const showPosts = useState(`${props.user.id}-show-posts`, () => true);
+
+const havePosts = computed(() => props.user.posts && props.user.posts.length > 0);
 </script>
 
 <template>
@@ -21,16 +25,28 @@ defineProps<{
     </template>
     <div>
       <div
-        class="text-lg font-bold"
+        class="flex text-lg font-bold items-center space-x-1"
         role="button"
         :class="{
-          'disabled cursor-default text-gray-400': !(user.posts && user.posts.length > 0),
+          'disabled cursor-default text-gray-400': !havePosts,
         }"
+        @click.prevent="showPosts = !showPosts"
       >
-        Posts
+        <span>
+          Posts
+        </span>
+        <span
+          v-if="havePosts"
+          class="transition duration-500 transform"
+          :class="{'rotate-x-180': showPosts}"
+        >
+          <i
+            class="icon-chevron-up"
+          />
+        </span>
       </div>
       <div
-        v-if="user.posts && user.posts.length > 0"
+        v-if="showPosts && havePosts"
         class="mt-2"
       >
         <ModelPost

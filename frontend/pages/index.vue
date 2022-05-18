@@ -6,15 +6,15 @@ const { data, pending, refresh } = await useFetch<unknown[]>(
   {
     server: false,
     method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    },
     body: {
       // take: 1,
       // skip: 0,
       include: {
-        posts: true,
+        posts: {
+          include: {
+            tags: true,
+          },
+        },
       },
     },
   },
@@ -23,6 +23,7 @@ const { data, pending, refresh } = await useFetch<unknown[]>(
 const users = useState<CompleteUser[] | null>('users', () => null);
 
 watch(pending, () => {
+  console.dir(data.value);
   const parsed = data.value.map(d => UserPrisma.parse(d));
   console.dir(parsed);
   users.value = parsed;
