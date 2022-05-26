@@ -1,78 +1,33 @@
 # pylama:ignore=D100,D101,D102,D103,D104,D106,D107
-from copy import copy
-from typing import Any
-
-from prisma import models, types
-from pydantic import create_model_from_typeddict
-from starlite import Controller, CORSConfig, OpenAPIConfig, Starlite, get
+from starlette import status
+from starlite import CORSConfig, Redirect, Starlite, get
 
 from . import prisma
-from .controllers import PostController, TagController, UserController
-from .controllers.config import Config
+from .controllers import FileController, PostController, TagController, UserController
+
+# TODO: bug report for byte (Base64 in Prisma) fields not being starlite serializable
 
 
-async def init():
-    await prisma.post.delete_many()
-    await prisma.tag.delete_many()
-    await prisma.user.delete_many()
-
-    await prisma.user.create(
-        data={
-            "name": "Robert",
-        },
-    )
-    user = await prisma.user.create(
-        data={
-            "name": "Nils",
-        },
-    )
-    tag = await prisma.tag.create(
-        data={
-            "tag": "Generic",
-        },
-    )
-    await prisma.post.create(
-        data={
-            "title": "A Post",
-            "user": {
-                "connect": {
-                    "id": user.id,
-                },
-            },
-            "tags": {
-                "connect": {
-                    "tag": tag.tag,
-                },
-            },
-        },
-    )
-
-
-class FileController(Controller):
-    @get()
-    async def file_find_many() -> list[models.File]:
-        return await prisma.file.find_many()
+@get(
+    status_code=status.HTTP_307_TEMPORARY_REDIRECT,
+    description="Redirect root to /schema",
+)
+def root_to_docs() -> Redirect:
+    return Redirect(path="/schema")
 
 
 app = Starlite(
     debug=True,
-    openapi_config=OpenAPIConfig(
-        title="My API",
-        version="0.0.1",
-        # create_examples=True,
-    ),
-    cors_config=CORSConfig(
-        allow_origins=["*"],
-        allow_methods=["*"],
-    ),
+    cors_config=CORSConfig(),
     on_startup=[
         lambda: prisma.connect(),
-        init,
     ],
     on_shutdown=[lambda: prisma.disconnect()],
     route_handlers=[
+        root_to_docs,
         UserController,
         PostController,
         TagController,
+        FileController,
     ],
 )

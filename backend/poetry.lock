@@ -17,7 +17,7 @@ trio = ["trio (>=0.16)"]
 
 [[package]]
 name = "asgiref"
-version = "3.5.1"
+version = "3.5.2"
 description = "ASGI specs, helper code, and adapters"
 category = "main"
 optional = false
@@ -49,11 +49,11 @@ uvloop = ["uvloop (>=0.15.2)"]
 
 [[package]]
 name = "certifi"
-version = "2021.10.8"
+version = "2022.5.18.1"
 description = "Python package for providing Mozilla's CA Bundle."
 category = "main"
 optional = false
-python-versions = "*"
+python-versions = ">=3.6"
 
 [[package]]
 name = "charset-normalizer"
@@ -95,7 +95,7 @@ python-versions = "*"
 
 [[package]]
 name = "faker"
-version = "13.11.1"
+version = "13.12.0"
 description = "Faker is a Python package that generates fake data for you."
 category = "main"
 optional = false
@@ -114,11 +114,11 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "httpcore"
-version = "0.14.7"
+version = "0.15.0"
 description = "A minimal low-level HTTP client."
 category = "main"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.7"
 
 [package.dependencies]
 anyio = ">=3.0.0,<4.0.0"
@@ -132,22 +132,21 @@ socks = ["socksio (>=1.0.0,<2.0.0)"]
 
 [[package]]
 name = "httpx"
-version = "0.22.0"
+version = "0.23.0"
 description = "The next generation HTTP client."
 category = "main"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.7"
 
 [package.dependencies]
 certifi = "*"
-charset-normalizer = "*"
-httpcore = ">=0.14.5,<0.15.0"
+httpcore = ">=0.15.0,<0.16.0"
 rfc3986 = {version = ">=1.3,<2", extras = ["idna2008"]}
 sniffio = "*"
 
 [package.extras]
 brotli = ["brotlicffi", "brotli"]
-cli = ["click (>=8.0.0,<9.0.0)", "rich (>=10.0.0,<11.0.0)", "pygments (>=2.0.0,<3.0.0)"]
+cli = ["click (>=8.0.0,<9.0.0)", "rich (>=10,<13)", "pygments (>=2.0.0,<3.0.0)"]
 http2 = ["h2 (>=3,<5)"]
 socks = ["socksio (>=1.0.0,<2.0.0)"]
 
@@ -252,11 +251,12 @@ test = ["appdirs (==1.4.4)", "pytest-cov (>=2.7)", "pytest-mock (>=3.6)", "pytes
 
 [[package]]
 name = "prisma"
-version = "0.6.5"
+version = "0.7.0a0"
 description = "Prisma Client Python is an auto-generated and fully type-safe database client"
 category = "main"
 optional = false
 python-versions = ">=3.7.0"
+develop = false
 
 [package.dependencies]
 click = ">=7.1.2"
@@ -267,9 +267,15 @@ python-dotenv = ">=0.12.0"
 typing-extensions = ">=3.7"
 
 [package.extras]
-all = ["tox (==3.25.0)", "wheel (==0.37.1)", "blue (==0.9.0)", "pre-commit (==2.18.1)", "twine (==4.0.0)", "mkdocs (==1.3.0)", "mkdocs-material (==8.2.13)"]
-dev = ["tox (==3.25.0)", "wheel (==0.37.1)", "blue (==0.9.0)", "pre-commit (==2.18.1)", "twine (==4.0.0)"]
+all = ["tox (==3.25.0)", "wheel (==0.37.1)", "blue (==0.9.0)", "pre-commit (==2.19.0)", "twine (==4.0.0)", "mkdocs (==1.3.0)", "mkdocs-material (==8.2.13)"]
+dev = ["tox (==3.25.0)", "wheel (==0.37.1)", "blue (==0.9.0)", "pre-commit (==2.19.0)", "twine (==4.0.0)"]
 docs = ["mkdocs (==1.3.0)", "mkdocs-material (==8.2.13)"]
+
+[package.source]
+type = "git"
+url = "https://github.com/nilsso/prisma-client-py"
+reference = "main"
+resolved_reference = "500e3518b423f6f57d42404ccd716b9e4fe6f4d3"
 
 [[package]]
 name = "pycodestyle"
@@ -296,7 +302,7 @@ email = ["email-validator (>=1.0.3)"]
 
 [[package]]
 name = "pydantic-factories"
-version = "1.2.8"
+version = "1.2.9"
 description = "Mock data generation for pydantic based models"
 category = "main"
 optional = false
@@ -466,7 +472,7 @@ full = ["itsdangerous", "jinja2", "python-multipart", "pyyaml", "requests"]
 
 [[package]]
 name = "starlite"
-version = "1.3.3"
+version = "1.3.4"
 description = "Light-weight and flexible ASGI API Framework"
 category = "main"
 optional = false
@@ -531,7 +537,7 @@ standard = ["websockets (>=10.0)", "httptools (>=0.4.0)", "watchgod (>=0.6)", "p
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "038fddcbedfa90af8af9ad1ff1564e2e3daa2b52ea17150f737a81fbeb61aa4a"
+content-hash = "aa6823de304664a8e2a5647fd836f3f802382b48deb1196a2a7acf680d23db3b"
 
 [metadata.files]
 anyio = [
@@ -539,8 +545,8 @@ anyio = [
     {file = "anyio-3.6.1.tar.gz", hash = "sha256:413adf95f93886e442aea925f3ee43baa5a765a64a0f52c6081894f9992fdd0b"},
 ]
 asgiref = [
-    {file = "asgiref-3.5.1-py3-none-any.whl", hash = "sha256:45a429524fba18aba9d512498b19d220c4d628e75b40cf5c627524dbaebc5cc1"},
-    {file = "asgiref-3.5.1.tar.gz", hash = "sha256:fddeea3c53fa99d0cdb613c3941cc6e52d822491fc2753fba25768fb5bf4e865"},
+    {file = "asgiref-3.5.2-py3-none-any.whl", hash = "sha256:1d2880b792ae8757289136f1db2b7b99100ce959b2aa57fd69dab783d05afac4"},
+    {file = "asgiref-3.5.2.tar.gz", hash = "sha256:4a29362a6acebe09bf1d6640db38c1dc3d9217c68e6f9f6204d72667fc19a424"},
 ]
 black = [
     {file = "black-22.3.0-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:2497f9c2386572e28921fa8bec7be3e51de6801f7459dffd6e62492531c47e09"},
@@ -568,8 +574,8 @@ black = [
     {file = "black-22.3.0.tar.gz", hash = "sha256:35020b8886c022ced9282b51b5a875b6d1ab0c387b31a065b84db7c33085ca79"},
 ]
 certifi = [
-    {file = "certifi-2021.10.8-py2.py3-none-any.whl", hash = "sha256:d62a0163eb4c2344ac042ab2bdf75399a71a2d8c7d47eac2e2ee91b9d6339569"},
-    {file = "certifi-2021.10.8.tar.gz", hash = "sha256:78884e7c1d4b00ce3cea67b44566851c4343c120abd683433ce934a68ea58872"},
+    {file = "certifi-2022.5.18.1-py3-none-any.whl", hash = "sha256:f1d53542ee8cbedbe2118b5686372fb33c297fcd6379b050cca0ef13a597382a"},
+    {file = "certifi-2022.5.18.1.tar.gz", hash = "sha256:9c5705e395cd70084351dd8ad5c41e65655e08ce46f2ec9cf6c2c08390f71eb7"},
 ]
 charset-normalizer = [
     {file = "charset-normalizer-2.0.12.tar.gz", hash = "sha256:2857e29ff0d34db842cd7ca3230549d1a697f96ee6d3fb071cfa6c7393832597"},
@@ -587,20 +593,20 @@ exrex = [
     {file = "exrex-0.10.5.tar.gz", hash = "sha256:3fb8b18fd9832eaff8b13dc042a4f63b13c5d684ee069f70a23ddfc6bcb708f3"},
 ]
 faker = [
-    {file = "Faker-13.11.1-py3-none-any.whl", hash = "sha256:c6ff91847d7c820afc0a74d95e824b48aab71ddfd9003f300641e42d58ae886f"},
-    {file = "Faker-13.11.1.tar.gz", hash = "sha256:cad1f69d72a68878cd67855140b6fe3e44c11628971cd838595d289c98bc45de"},
+    {file = "Faker-13.12.0-py3-none-any.whl", hash = "sha256:5cbb89fc6a16793b2bd98252c03a86098c7426beab0a20382709a815651b8804"},
+    {file = "Faker-13.12.0.tar.gz", hash = "sha256:1f6478011ac8a8273e0f9cd6da03d9ea6391c622db340eca015339512e9cde29"},
 ]
 h11 = [
     {file = "h11-0.12.0-py3-none-any.whl", hash = "sha256:36a3cb8c0a032f56e2da7084577878a035d3b61d104230d4bd49c0c6b555a9c6"},
     {file = "h11-0.12.0.tar.gz", hash = "sha256:47222cb6067e4a307d535814917cd98fd0a57b6788ce715755fa2b6c28b56042"},
 ]
 httpcore = [
-    {file = "httpcore-0.14.7-py3-none-any.whl", hash = "sha256:47d772f754359e56dd9d892d9593b6f9870a37aeb8ba51e9a88b09b3d68cfade"},
-    {file = "httpcore-0.14.7.tar.gz", hash = "sha256:7503ec1c0f559066e7e39bc4003fd2ce023d01cf51793e3c173b864eb456ead1"},
+    {file = "httpcore-0.15.0-py3-none-any.whl", hash = "sha256:1105b8b73c025f23ff7c36468e4432226cbb959176eab66864b8e31c4ee27fa6"},
+    {file = "httpcore-0.15.0.tar.gz", hash = "sha256:18b68ab86a3ccf3e7dc0f43598eaddcf472b602aba29f9aa6ab85fe2ada3980b"},
 ]
 httpx = [
-    {file = "httpx-0.22.0-py3-none-any.whl", hash = "sha256:e35e83d1d2b9b2a609ef367cc4c1e66fd80b750348b20cc9e19d1952fc2ca3f6"},
-    {file = "httpx-0.22.0.tar.gz", hash = "sha256:d8e778f76d9bbd46af49e7f062467e3157a5a3d2ae4876a4bbfd8a51ed9c9cb4"},
+    {file = "httpx-0.23.0-py3-none-any.whl", hash = "sha256:42974f577483e1e932c3cdc3cd2303e883cbfba17fe228b0f63589764d7b9c4b"},
+    {file = "httpx-0.23.0.tar.gz", hash = "sha256:f28eac771ec9eb4866d3fb4ab65abd42d38c424739e80c08d8d20570de60b0ef"},
 ]
 idna = [
     {file = "idna-3.3-py3-none-any.whl", hash = "sha256:84d9dd047ffa80596e0f246e2eab0b391788b0503584e8945f2368256d2735ff"},
@@ -710,10 +716,7 @@ platformdirs = [
     {file = "platformdirs-2.5.2-py3-none-any.whl", hash = "sha256:027d8e83a2d7de06bbac4e5ef7e023c02b863d7ea5d079477e722bb41ab25788"},
     {file = "platformdirs-2.5.2.tar.gz", hash = "sha256:58c8abb07dcb441e6ee4b11d8df0ac856038f944ab98b7be6b27b2a3c7feef19"},
 ]
-prisma = [
-    {file = "prisma-0.6.5-py3-none-any.whl", hash = "sha256:6af26bee076ef48b219a8ac3b0a5fd244dc3b560641bf8c44fd7b7a00f836dc8"},
-    {file = "prisma-0.6.5.tar.gz", hash = "sha256:34e60ff7090dac6fd1c2e925ca4b4e13c05d6a16e5fdb63403a406ca528c412d"},
-]
+prisma = []
 pycodestyle = [
     {file = "pycodestyle-2.8.0-py2.py3-none-any.whl", hash = "sha256:720f8b39dde8b293825e7ff02c475f3077124006db4f440dcbc9a20b76548a20"},
     {file = "pycodestyle-2.8.0.tar.gz", hash = "sha256:eddd5847ef438ea1c7870ca7eb78a9d47ce0cdb4851a5523949f2601d0cbbe7f"},
@@ -756,8 +759,8 @@ pydantic = [
     {file = "pydantic-1.9.0.tar.gz", hash = "sha256:742645059757a56ecd886faf4ed2441b9c0cd406079c2b4bee51bcc3fbcd510a"},
 ]
 pydantic-factories = [
-    {file = "pydantic-factories-1.2.8.tar.gz", hash = "sha256:d97b10c251874e87aa306bb001a75eb340f58debbe9124a572331f4926484e5e"},
-    {file = "pydantic_factories-1.2.8-py3-none-any.whl", hash = "sha256:e09fe7e8cc20d06dc96bda0f3d9cb5986cfc1281424b1ec19b4dbe6723714401"},
+    {file = "pydantic-factories-1.2.9.tar.gz", hash = "sha256:8f2be46059aac1420fde12045ba2289c4770402d3d11359dfc13852f21ff1176"},
+    {file = "pydantic_factories-1.2.9-py3-none-any.whl", hash = "sha256:6fa3130bca2e484c5492163bfb0ebe0766e520ab4360c48cfbc4c8fb70f53215"},
 ]
 pydocstyle = [
     {file = "pydocstyle-6.1.1-py3-none-any.whl", hash = "sha256:6987826d6775056839940041beef5c08cc7e3d71d63149b48e36727f70144dc4"},
@@ -842,8 +845,8 @@ starlette = [
     {file = "starlette-0.20.0.tar.gz", hash = "sha256:a500c40aba9b7729e396b0b3e4cd37fdbafbd859983a9b60a64359957024d912"},
 ]
 starlite = [
-    {file = "starlite-1.3.3-py3-none-any.whl", hash = "sha256:1e680fb657fad59bed0508c1a0553a900eb1960d8a9ad5ddb6152acf9d6e72d6"},
-    {file = "starlite-1.3.3.tar.gz", hash = "sha256:16c3ee55577bce49454fbe87dbeb4c5a216b838b59fcada80ca3813601a6a9a3"},
+    {file = "starlite-1.3.4-py3-none-any.whl", hash = "sha256:6359fb5c58a2c3ad8f1a61c432027dff018d69d8cded3e21f2572aeb8d5bbc01"},
+    {file = "starlite-1.3.4.tar.gz", hash = "sha256:38f61bee08f93af172f0f5aa67b9186473f65c621b65e83d0f54825df7a5f156"},
 ]
 tomli = [
     {file = "tomli-2.0.1-py3-none-any.whl", hash = "sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc"},

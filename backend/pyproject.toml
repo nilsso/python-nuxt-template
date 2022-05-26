@@ -6,10 +6,12 @@ authors = ["Nils Olsson <nilso@enosis.net>"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-prisma = "^0.6.5"
+# prisma = "^0.6.5"
+prisma = {git = "https://github.com/nilsso/prisma-client-py", rev = "main"}
 starlite = "^1.3.3"
 uvicorn = "^0.17.6"
 openapi-schema-pydantic = "^1.2.2"
+pydantic = "1.9.0"
 
 [tool.poetry.dev-dependencies]
 pylama = "^8.3.8"

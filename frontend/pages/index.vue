@@ -1,14 +1,17 @@
 <script lang="ts" setup>
 import { UserPrisma, CompleteUser } from '@/prisma/zod/user';
+import { modelRequest } from '@/common'
 
-const { data, pending, refresh } = await useFetch<unknown[]>(
-  'http://localhost:8000/user',
+const {
+  data: usersData,
+  pending: usersPending,
+  refresh: usersRefresh,
+} = await useFetch<unknown[]>(
+  'http://localhost:8000/user/find_many',
   {
     server: false,
     method: 'POST',
     body: {
-      // take: 1,
-      // skip: 0,
       include: {
         posts: {
           include: {
@@ -21,59 +24,31 @@ const { data, pending, refresh } = await useFetch<unknown[]>(
 );
 
 const users = useState<CompleteUser[] | null>('users', () => null);
+const createUserShow = useState('show-create', () => false);
+const createUserName = useState('create-name', () => "");
 
-watch(pending, () => {
-  console.dir(data.value);
-  const parsed = data.value.map(d => UserPrisma.parse(d));
-  console.dir(parsed);
-  users.value = parsed;
+watch(usersPending, () => {
+  users.value = usersData.value.map(d => UserPrisma.parse(d));
 });
-
-// const createUser = async () => {
-//   await $fetch('http://localhost:8000/user/next', { method: 'POST' });
-//   refresh();
-// };
-//
-// const deleteRandomUser = async() => {
-//   await $fetch('http://localhost:8000/user/random', { method: 'DELETE' });
-//   refresh();
-// };
-//
-// const deleteAllUsers = async() => {
-//   await $fetch('http://localhost:8000/user/all', { method: 'DELETE' });
-//   refresh();
-// };
 </script>
 
 <template>
   <div class="space-y-2">
     <Card
-      class="w-max shadow"
+      class="w-100 shadow"
       header-bg-color="bg-cyan-500"
     >
       <template #header>
-        <div class="flex space-x-2">
-          <div class="text-cyan-200">
-            <span>Users</span>
+        <div class="flex space-x-2 items-center text-cyan-200">
+          <div>Users</div>
+          <span class="flex-1" />
+          <div
+            role="button"
+            class="transition hover:text-green-300"
+            @click.prevent="createUserShow = true"
+          >
+            <i class="icon-add" />
           </div>
-          <!-- <button -->
-          <!--   class="inline block p-0 text-sm leading-0 text-white bg-blue-500 border-2 border-blue-500 rounded" -->
-          <!--   role="button" -->
-          <!-- > -->
-          <!--   Create Next -->
-          <!-- </button> -->
-          <!-- <button -->
-          <!--   class="px-1 py-.5 text-base text-red-500 bg-white border-2 border-red-500 rounded" -->
-          <!--   role="button" -->
-          <!-- > -->
-          <!--   Delete Random -->
-          <!-- </button> -->
-          <!-- <button -->
-          <!--   class="px-1 py-.5 text-base text-white bg-red-500 border-2 border-red-500 rounded" -->
-          <!--   role="button" -->
-          <!-- > -->
-          <!--   Delete All -->
-          <!-- </button> -->
         </div>
       </template>
       <p v-if="users === null">
@@ -83,10 +58,63 @@ watch(pending, () => {
         v-else
         class="flex flex-col space-y-2"
       >
+        <Card v-show="createUserShow">
+          <template #header>
+            <div class="flex items-center">
+              <div>Create New User</div>
+              <span class="flex-1" />
+              <div
+                role="button"
+                class="transition hover:text-red-300"
+                @click.prevent="createUserShow = false"
+              >
+                <i class="icon-close-o" />
+              </div>
+            </div>
+          </template>
+          <form
+            class="flex flex-col space-y-2"
+            @submit.prevent="modelRequest('user', 'create', 'PUT', {
+              data: {
+                name: createUserName,
+              },
+            }).then(() => usersRefresh().then(() => createUserShow = false))"
+          >
+            <div>
+              <input
+                v-model="createUserName"
+                type="text"
+                class="w-full input-text"
+                placeholder="Name"
+              >
+            </div>
+            <div class="flex flex-row-reverse">
+              <div class="relative btn btn-green">
+                <button
+                  class="px-2 py-.5"
+                  type="submit"
+                  :disabled="createUserName === ''"
+                >
+                  Create
+                </button>
+                <div
+                  v-show="createUserName.length === 0"
+                  class="absolute inset-0 bg-gray-500 bg-opacity-30 rounded"
+                />
+              </div>
+            </div>
+          </form>
+        </Card>
         <ModelUser
           v-for="user in users"
           :key="user.id"
           :user="user"
+          @refresh="usersRefresh()"
+          @delete="(id: number) => modelRequest('user', 'delete', 'DELETE', {
+            where: {
+              id,
+            }
+          }).then(() => usersRefresh())"
         />
       </div>
     </Card>

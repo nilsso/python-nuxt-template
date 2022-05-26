@@ -1,8 +1,14 @@
 <script lang="ts" setup>
 import { CompletePost } from '@/prisma/zod';
+import { Method, modelRequest } from '@/common';
 
 const props = defineProps<{
   post: CompletePost,
+}>();
+
+const emit = defineEmits<{
+  (e: 'delete', id: number): void,
+  (e: 'refresh'): void,
 }>();
 
 const hasTags = computed(() => props.post.tags && props.post.tags.length > 0);
@@ -14,10 +20,21 @@ const hasTags = computed(() => props.post.tags && props.post.tags.length > 0);
   >
     <template #header>
       <div class="flex text-gray-200 space-x-2 items-center">
-        <span>{{ post.title }}</span>
-        <span class="px-2 py-1 leading-none border border-gray-200 rounded-full">
-          ID {{ post.id }}
-        </span>
+        <div class="flex space-x-2 items-center">
+          <span>{{ post.title }}</span>
+          <span class="px-2 py-1 leading-none border border-gray-200 rounded-full">
+            ID {{ post.id }}
+          </span>
+        </div>
+        <span class="flex-1" />
+        <span class="flex-1" />
+        <div
+          role="button"
+          class="transition hover:text-red-300"
+          @click.prevent="emit('delete', post.id)"
+        >
+          <i class="icon-close-o" />
+        </div>
       </div>
     </template>
     <div class="max-w-150">
