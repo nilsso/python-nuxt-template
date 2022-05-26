@@ -18,6 +18,7 @@
 ### TODO
 
 - [ ] Describe backend/frontend structure, choice of Prisma and Zod
+- [ ] Link dependencies
 - [ ] Dockerize
 - [ ] Watcher to refresh backend/frontend schemas on modifying `./prisma/schema.prisma`
   (maybe also make backend/frontend schemas read only?)
@@ -44,3 +45,14 @@ Then in another shell:
 ```bash
 (cd frontend && yarn install && npx prisma generate && yarn dev)
 ```
+
+And that's it! You can now navigate to [localhost:8000][backend] to view the full Python Starlite REST API.
+
+[![Viewing the Starlite REST API](./doc/img/web-schema.png)][backend]
+
+And navigate to [localhost:3000][frontend] for the frontend.
+
+[![Viewing the frontend](./doc/img/frontend.png)][frontend]
+
+[backend]: http://localhost:8000
+[frontend]: http://localhost:3000
