@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { UserPrisma, CompleteUser } from '@/prisma/zod/user';
-import { modelRequest } from '@/common'
+import { modelRequest } from '@/common';
 
 const {
   data: usersData,
@@ -25,7 +25,7 @@ const {
 
 const users = useState<CompleteUser[] | null>('users', () => null);
 const createUserShow = useState('show-create', () => false);
-const createUserName = useState('create-name', () => "");
+const createUserName = useState('create-name', () => '');
 
 watch(usersPending, () => {
   users.value = usersData.value.map(d => UserPrisma.parse(d));

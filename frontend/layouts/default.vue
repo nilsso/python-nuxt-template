@@ -1,7 +1,7 @@
 <template>
-  <div class="container mx-auto">
+  <div class="w-max py-8 mx-auto">
     <h1 class="py-2">
-      <pre class="inline">python-nuxt</pre> Test
+      <pre class="inline">python-nuxt Test</pre>
     </h1>
     <slot />
   </div>
