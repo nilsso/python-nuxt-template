@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { Ref } from 'vue';
 import { UserPrisma, CompleteUser } from '@/prisma/zod/user';
 import { modelRequest } from '@/common';
 
@@ -30,10 +31,60 @@ const createUserName = useState('create-name', () => '');
 watch(usersPending, () => {
   users.value = usersData.value.map(d => UserPrisma.parse(d));
 });
+
+const fileInput: Ref<HTMLInputElement | null> = ref(null);
+const uploadFile = useState<File | null>('upload-file', () => null);
+
+function eventFiles(e: Event): FileList {
+  const target = e.target as HTMLInputElement | null;
+  const files = target?.files;
+  if (!(files?.length > 0)) {
+    throw 'event did not have files';
+  }
+  return files;
+}
+
+function eventFile(e: Event): File {
+  const files = eventFiles(e);
+  if (!(files.length === 1)) {
+    throw 'event had more than one file';
+  }
+  return files[0];
+}
+
+watch(uploadFile, () => console.dir(uploadFile.value));
+
+function clearFile() {
+  if (fileInput.value) {
+    fileInput.value.value = '';
+    uploadFile.value = null;
+  }
+}
 </script>
 
 <template>
   <div class="space-y-2">
+    <div class="space-x-2">
+      <button
+        class="btn"
+        :disabled="uploadFile === null"
+        @click.prevent=""
+      >
+        Upload
+      </button>
+      <input
+        ref="fileInput"
+        type="file"
+        @change="(e) => uploadFile = eventFile(e)"
+      >
+      <button
+        class="btn btn-red"
+        @click.prevent="clearFile"
+      >
+        Clear
+      </button>
+      <span>{{ fileInput?.value }}</span>
+    </div>
     <Card
       class="w-100 shadow"
       header-bg-color="bg-cyan-500"
@@ -120,3 +171,17 @@ watch(usersPending, () => {
     </Card>
   </div>
 </template>
+
+<style scoped>
+.btn {
+  @apply "px-2 text-white border-2 rounded";
+}
+
+.btn:not(:disabled) {
+  @apply "bg-blue-500 border-blue-500 hover:(bg-blue-600 border-blue-600) active:(bg-blue-700 border-blue-700)";
+}
+
+.btn:disabled {
+  @apply "bg-blue-700 border-blue-700 cursor-default opacity-50";
+}
+</style>
