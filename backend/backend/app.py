@@ -1,6 +1,7 @@
 # pylama:ignore=D100,D101,D102,D103,D104,D106,D107
+from pydantic import BaseModel
 from starlette import status
-from starlite import CORSConfig, Redirect, Starlite, get
+from starlite import CORSConfig, Redirect, Starlite, get, post
 
 from . import prisma
 from .controllers import FileController, PostController, TagController, UserController
@@ -14,6 +15,15 @@ from .controllers import FileController, PostController, TagController, UserCont
 )
 def root_to_docs() -> Redirect:
     return Redirect(path="/schema")
+
+
+class GetFileParams(BaseModel):
+    name: str
+
+
+@post(path="/file")
+def get_file(data: GetFileParams):
+    pass
 
 
 app = Starlite(
